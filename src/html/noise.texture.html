@@ -16,9 +16,9 @@
 
 <script id="fs" type="x-shader/x-fragment">
     precision mediump float;
-    uniform float uTime;
+    uniform float u_time;
     varying vec3 vPosition;
-    uniform vec3 uCursor;
+    uniform vec3 u_mouse;
 
     // Noise
     vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }

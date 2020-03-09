@@ -15,19 +15,19 @@
 </script>
 
 <script id="fs" type="x-shader/x-fragment">
-    precision mediump float;
-    uniform float uTime;
-    varying vec3  vPosition;
+   precision mediump float;
+   uniform vec2 u_resolution;
+   uniform vec3 u_mouse;
+   uniform float u_time;
+   varying vec3  vPosition;
 
-    void main() {
-        float x = vPosition.x;
-        float y = vPosition.y;
-        float z = vPosition.z;
-        float xTime = uTime * x/sin(uTime);
-        float yTime = uTime * y/sin(uTime);
-        float zTime = uTime * z/sin(uTime);
-        vec3 color = vec3(sin(xTime), sin(yTime), sin(zTime));
-        gl_FragColor = vec4(color, 1.0);
+   void main() {
+      if(u_mouse.z == 1.0 && floor(u_mouse.x/10.0 + 0.5) == floor(gl_FragCoord.x/10.0 + 0.5) && floor(u_mouse.y/10.0 + 0.5) == floor(gl_FragCoord.y/10.0 + 0.5)) {
+         gl_FragColor = vec4(1.0,1.0,1.0,1.0);
+      }else{
+         vec2 st = gl_FragCoord.xy/u_resolution;
+         gl_FragColor = vec4(st.x,st.y,0.0,1.0);	// 出错
+      }
    }
 </script>
 

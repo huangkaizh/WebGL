@@ -16,9 +16,9 @@
 
 <script id="fs" type="x-shader/x-fragment">
     precision mediump float;
-    uniform float uTime;
+    uniform float u_time;
     varying vec3 vPosition;
-    uniform vec3 uCursor;
+    uniform vec3 u_mouse;
 
     struct Sphere {
         vec3 center;
@@ -59,7 +59,7 @@
         rays[0].direction = normalize(vec3(x-0.5, 0.5-y, -focalLength));
 
         // Create Light source
-        light[0].position = vec3(uCursor.x, -uCursor.y, 0.9);
+        light[0].position = vec3(u_mouse.x, -u_mouse.y, 0.9);
         light[0].ambience = 0.01;
     }
 

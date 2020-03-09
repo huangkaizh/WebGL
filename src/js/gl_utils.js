@@ -90,8 +90,10 @@ function gl_init(gl, vertexShader, fragmentShader) {
     gl.aPosition = gl.getAttribLocation(program, "aPosition");
     gl.enableVertexAttribArray(gl.aPosition);
     gl.vertexAttribPointer(gl.aPosition, 3, gl.FLOAT, false, 0, 0);
-    gl.uTime = gl.getUniformLocation(program, "uTime");
-    gl.uCursor = gl.getUniformLocation(program, "uCursor");
+    gl.u_resolution = gl.getUniformLocation(program, "u_resolution");
+    gl.u_mouse = gl.getUniformLocation(program, "u_mouse");
+    gl.u_time = gl.getUniformLocation(program, "u_time");
+    gl.u_mouse = gl.getUniformLocation(program, "u_mouse");
 }
 
 /**
@@ -99,8 +101,10 @@ function gl_init(gl, vertexShader, fragmentShader) {
  * @param gl
  */
 function gl_update(gl) {
-    gl.uniform1f(gl.uTime, (new Date()).getTime() / 1000 - time0);
-    gl.uniform3f(gl.uCursor, gl.cursor.x, gl.cursor.y, gl.cursor.z); // Set cursor uniform variable.
+    gl.uniform2f(gl.u_resolution, gl.drawingBufferWidth, gl.drawingBufferHeight);
+    gl.uniform1f(gl.u_time, (new Date()).getTime() / 1000 - time0);
+    console.log('gl.cursor', gl.cursor);
+    gl.uniform3f(gl.u_mouse, gl.cursor.x, gl.cursor.y, gl.cursor.z); // Set cursor uniform variable.
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     // Start the next frame
     requestAnimFrame(function() { gl_update(gl); });
@@ -124,8 +128,10 @@ function start_gl(canvas_id, vertexShader, fragmentShader) {
 
     function setMouse(z) {
         var r = event.target.getBoundingClientRect();
-        gl.cursor.x = (event.clientX - r.left  ) / (r.right - r.left) * 2 - 1;
-        gl.cursor.y = (event.clientY - r.bottom) / (r.top - r.bottom) * 2 - 1;
+        // gl.cursor.x = (event.clientX - r.left  ) / (r.right - r.left);
+        // gl.cursor.y = (event.clientY - r.bottom) / (r.top - r.bottom);
+        gl.cursor.x = event.clientX - r.left;
+        gl.cursor.y = r.bottom - event.clientY;
         if (z !== undefined)
             gl.cursor.z = z;
     }

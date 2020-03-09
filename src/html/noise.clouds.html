@@ -16,9 +16,9 @@
 
 <script id="fs" type="x-shader/x-fragment">
     precision mediump float;
-    uniform float uTime;
+    uniform float u_time;
     varying vec3 vPosition;
-    uniform vec3 uCursor;
+    uniform vec3 u_mouse;
 
     // Noise
     vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
@@ -74,7 +74,7 @@
     }
 
     vec3 clouds(float x, float y) {
-        float L = turbulence(vec3(x, y, uTime * .1));
+        float L = turbulence(vec3(x, y, u_time * .1));
         return vec3(noise(vec3(.5, .5, L) * .7));
     }
 
