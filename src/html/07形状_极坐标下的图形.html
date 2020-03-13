@@ -1,0 +1,61 @@
+<script src="../js/gl_utils.js"></script>
+
+<body bgcolor="black">
+  <canvas id="canvas1" width="720" height="720"> </canvas>
+</body>
+
+<script id="vs" type="x-shader/x-vertex">
+  attribute vec3 aPosition;
+  varying   vec3 vPosition;
+  void main() {
+     gl_Position = vec4(aPosition, 1.0);
+     vPosition = aPosition;
+  }
+</script>
+
+<script id="fs" type="x-shader/x-fragment">
+  #ifdef GL_ES
+  precision mediump float;
+  #endif
+
+  #define TWO_PI 6.28318530718
+
+  uniform vec2 u_resolution;
+  uniform float u_time;
+
+  void main(){
+    vec2 st = gl_FragCoord.xy/u_resolution.xy;
+    vec3 color = vec3(0.0);
+
+    vec2 pos = vec2(0.5)-st;
+
+    float r = length(pos)*2.0;
+    float a = atan(pos.y,pos.x);
+
+    float f = cos(a*3.) - 0.1;
+    f = abs(cos(a*3.));
+    f = abs(cos(a*2.5))*.5+.3;
+    f = abs(cos(a*12.)*sin(a*3.))*.8+.1;
+    f = smoothstep(-.5,1., cos(a*10. + u_time))*0.2+0.5;
+
+    color = vec3( 1.-smoothstep(f,f+0.02,r) );
+
+    color = color * abs(vec3(sin(st.x + u_time), cos(st.y + u_time), sin(u_time)));
+
+    gl_FragColor = vec4(color, 1.0);
+}
+</script>
+
+<script>
+  start_gl(
+    "canvas1",
+    getStringFromDOMElement("vs"),
+    getStringFromDOMElement("fs")
+  );
+</script>
+
+<style>
+  body {
+    margin: 0;
+  }
+</style>

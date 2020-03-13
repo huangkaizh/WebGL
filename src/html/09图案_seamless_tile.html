@@ -1,0 +1,70 @@
+<script src="../js/gl_utils.js"></script>
+
+<body bgcolor="gray">
+  <canvas id="canvas1" width="720" height="720"> </canvas>
+</body>
+
+<script id="vs" type="x-shader/x-vertex">
+  attribute vec3 aPosition;
+  varying   vec3 vPosition;
+  void main() {
+     gl_Position = vec4(aPosition, 1.0);
+     vPosition = aPosition;
+  }
+</script>
+
+<script id="fs" type="x-shader/x-fragment">
+  #ifdef GL_ES
+  precision mediump float;
+  #endif
+
+  uniform vec2 u_resolution;
+  uniform float u_time;
+
+  vec2 tile (vec2 st, float _zoom) {
+      st *= _zoom;
+      return fract(st);
+  }
+
+  vec2 seamlessTile(vec2 st){
+      st *= 2.0;
+      float index = 0.0;
+      index += step(1., mod(st.x,2.0));
+      index += step(1., mod(st.y,2.0))*2.0;
+      st = fract(st);
+      if(index == 1.0){
+          st.x = 1.0-st.x;
+      } else if(index == 2.0){
+          st.y = 1.0-st.y;
+      } else if(index == 3.0){
+          st = 1.0-st;
+      }
+      return st;
+  }
+
+  void main (void) {
+      vec2 st = gl_FragCoord.xy/u_resolution.xy;
+
+      st = tile(st,1.0);
+      st = seamlessTile(st);
+
+
+      // step(st.x,st.y) just makes a b&w triangles
+      // but you can use whatever design you want.
+      gl_FragColor = vec4(vec3(step(st.x,st.y)),1.0);
+  }
+</script>
+
+<script>
+  start_gl(
+    "canvas1",
+    getStringFromDOMElement("vs"),
+    getStringFromDOMElement("fs")
+  );
+</script>
+
+<style>
+  body {
+    margin: 0;
+  }
+</style>
